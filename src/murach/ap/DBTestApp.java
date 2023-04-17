@@ -7,14 +7,6 @@ import java.util.Scanner;
 
 public class DBTestApp {
     public static void main(String args[]) throws SQLException {
-
-        String query
-                = "SELECT vendor_name, invoice_number, invoice_total "
-                + "FROM vendors INNER JOIN invoices "
-                + "    ON vendors.vendor_id = invoices.vendor_id "
-                + "WHERE invoice_total >= 500 "
-                + "ORDER BY vendor_name, invoice_total DESC";
-        
         
         //working in the hvs database
         String dbUrl = "jdbc:mysql://localhost:3306/hvs";
@@ -71,11 +63,13 @@ public class DBTestApp {
                     //add item menu
                     case 1:
                     try {
-                        String name;
-                        String upc;
-                        double price;
-                        double discount;
+                        //variables used to grab user input
+                        String name, upc;
+                        double price, discount;
+
                         addItemMenu();
+
+
                         System.out.print("Item name: ");
                         sc.nextLine();
                         name = sc.nextLine();
@@ -88,7 +82,53 @@ public class DBTestApp {
 
                         Item potentialItem = new Item(upc, name, price, discount);
 
-                        ps = connection.prepareStatement(potentialItem.insertInto() );
+                        ps = connection.prepareStatement(potentialItem.getInsertIntoDatabaseStatement() );
+                        ps.execute();
+                    
+                    } catch (SQLException f) {
+                        System.out.println(f.getMessage());
+
+                    //some issue with the scanner trying to grab data
+                    } catch (Exception e) {
+                        System.out.println("ERROR: Invalid input! Please try again...");
+                        //stop endless looping
+                        System.out.println();
+                        sc.nextLine();
+                    }
+                    break;
+
+                    //add store menu
+                    case 2:
+                    try {
+                        //variables used to grab user input
+                        String storeNumber;
+                        String address;
+                        String city;
+                        String state;
+                        String zip;
+                        String phoneNumber;
+
+                        addStoreMenu();
+                        
+                        System.out.print("Store number: ");
+                        sc.nextLine();
+                        storeNumber = sc.nextLine();
+                        System.out.print("Store street address\n(Don't include city, state, and/or zip code): ");
+                        address = sc.nextLine();
+                        System.out.print("Store city: ");
+                        city = sc.nextLine();
+                        System.out.print("Store state (only two letters): ");
+                        //turns the state into Uppercase letters
+                        state = sc.nextLine().toUpperCase();
+                        System.out.print("Store zip code: ");
+                        zip = sc.nextLine();
+                        System.out.print("Store phone number: ");
+                        //removes all the misc. chars when someone types in a phone number and just keeps the digits
+                        phoneNumber = sc.nextLine().replaceAll("[^0-9]", ""); 
+
+                        Store potentialStore = new Store(storeNumber, address, city, state, zip, phoneNumber);
+
+                        ps = connection.prepareStatement(potentialStore.getInsertIntoDatabaseStatement() );
                         ps.execute();
                     } catch (SQLException f) {
                         System.out.println(f.getMessage());
@@ -100,16 +140,13 @@ public class DBTestApp {
                         System.out.println();
                         sc.nextLine();
                     }
-
-                        break;
-                    case 2:
                         break;
                     case 3:
                         break;
                     case 4:
                         break;
                     case 5:
-                        //exits the program sucessfully
+                        //exits the program successfully
                         System.exit(0);
                     default:
                         System.out.println("Error: Not a valid option! Please try again...");
@@ -124,7 +161,7 @@ public class DBTestApp {
                 sc.nextLine();
             }
 
-            //loops idefinently until option 5 is entered
+            //loops indefinitely until option 5 is entered
         } while(true);
 
 
@@ -166,6 +203,18 @@ public class DBTestApp {
         System.out.println("be contained in the database! Otherwise, the ");
         System.out.println("item won't be added...");
         System.out.println("-------------------------------------------");
+        System.out.println();
+        System.out.println("Enter the following details about the item:");
+    }
+
+    public static void addStoreMenu() {
+        System.out.println();
+        System.out.println("--------------------------------------------");
+        System.out.println("NOTE: The store number and phone number must");
+        System.out.println("not already me contained in the database!   ");
+        System.out.println("Otherwise, the store won't be added...      ");
+        System.out.println("--------------------------------------------");
+        System.out.println();
         System.out.println("Enter the following details about the item:");
     }
 }

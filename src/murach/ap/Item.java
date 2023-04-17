@@ -33,7 +33,7 @@ public class Item implements SQLScripts {
         return discount;
     }
 
-    public String insertInto() {
+    public String getInsertIntoDatabaseStatement() {
         return 
         // create a call statement
         "CALL addItem('" + upc + "', '" + name + "', " + price + ", " + discount + " )";

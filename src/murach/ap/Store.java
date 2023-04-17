@@ -1,6 +1,6 @@
 package murach.ap;
 
-public class Store {
+public class Store implements SQLScripts {
     private String storeNumber;
     private String address;
     private String city;
@@ -42,6 +42,19 @@ public class Store {
     }
     public String getPhoneNumber() {
         return phoneNumber;
+    }
+
+    public String getInsertIntoDatabaseStatement() {
+        return "CALL addStore('" + storeNumber + "', '" + address + "', '" + city + "', '" + state + "', '" + zip + "', '" + phoneNumber + "')";
+    }
+
+    @Override
+    public String toString() {
+        return
+        "Store number: " + storeNumber + '\n' +
+        "Store address: " + address + ", " + city + ", " + state + " " + zip + '\n' +
+        "Store phone number: " + '(' + phoneNumber.substring(0, 2) + ") " + phoneNumber.substring(3, 5) +
+            "-" + phoneNumber.substring(6, 9); 
     }
     
 }
