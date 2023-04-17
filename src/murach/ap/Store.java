@@ -51,10 +51,13 @@ public class Store implements SQLScripts {
     @Override
     public String toString() {
         return
-        "Store number: " + storeNumber + '\n' +
+        "************" +
+        "STORE #" + storeNumber + '\n' +
+        "************" +
         "Store address: " + address + ", " + city + ", " + state + " " + zip + '\n' +
         "Store phone number: " + '(' + phoneNumber.substring(0, 2) + ") " + phoneNumber.substring(3, 5) +
-            "-" + phoneNumber.substring(6, 9); 
+            "-" + phoneNumber.substring(6, 9) + '\n' +
+        "--------------------------------";
     }
     
 }
